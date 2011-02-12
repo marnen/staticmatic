@@ -9,11 +9,10 @@ module StaticMatic
       # or specific stylesheets in a specific order
       # = stylesheets :reset, :application
       # Can also pass options hash in at the end so you can specify :media => :print
-      def stylesheets(*params)
-        options = {}
-        if params.last.is_a?(Hash)
-          options = params.last
-          params.slice!(-1, 1)
+      def stylesheets(*params, options)
+        unless options.is_a? Hash
+          params.push(options)
+          options = {}
         end
         options[:media] = 'all' unless options.has_key?(:media)
         options[:rel] = 'stylesheet'; options[:type] = 'text/css'
@@ -51,7 +50,10 @@ module StaticMatic
                           gsub(/#{@staticmatic.site_dir}/, "").
                           gsub(/#{filename_without_extension}\.(sass|scss|css)/, "")
                           
-              options[:href] = File.join(relative_path, path, "#{filename_without_extension}.css")
+              src = File.join(relative_path, path, "#{filename_without_extension}.css")
+              src = qstring(src, options[:qstring])
+              options[:href] = src
+              options.delete(:qstring)
               output << tag(:link, options)
             end
           end
@@ -61,7 +63,10 @@ module StaticMatic
             if File.exist?(File.join(@staticmatic.src_dir, 'stylesheets', "#{file}.sass")) ||
                File.exist?(File.join(@staticmatic.src_dir, 'stylesheets', "#{file}.scss")) || 
                File.exist?(File.join(@staticmatic.site_dir, 'stylesheets', "#{file}.css"))
-              options[:href] = File.join(relative_path, "stylesheets", "#{file}.css")
+              src = File.join(relative_path, "stylesheets", "#{file}.css")
+              src = qstring(src, options[:qstring])
+              options[:href] = src
+              options.delete(:qstring)
               output << tag(:link, options)
             end
           end
@@ -74,13 +79,18 @@ module StaticMatic
       #
       # javascripts('test')   ->   <script language="javascript" src="javascripts/test.js"></script>
       #    
-      def javascripts(*files)
+      def javascripts(*files, options)
+        unless options.is_a? Hash
+          files.push(options)
+          options = {}
+        end
         relative_path = current_page_relative_path
 
         output = ""
         files.each do |file|
           file_str = file.to_s
           src = file_str.match(%r{^((\.\.?)?/|https?://)}) ? file_str : "#{relative_path}javascripts/#{file_str}.js"
+          src = qstring(src, options[:qstring])
           output << tag(:script, :language => 'javascript', :src => src, :type => "text/javascript") { "" }
         end
         output
@@ -95,6 +105,16 @@ module StaticMatic
         options[:src] = name.match(%r{^((\.\.?)?/|https?://)}) ? name : "#{current_page_relative_path}images/#{name}"
         options[:alt] ||= name.split('/').last.split('.').first.capitalize.gsub(/_|-/, ' ')
         tag :img, options
+      end
+      
+      # Prepares a query string based on the given qstr.
+      # If qstr is true, it generates a query string based on the current time.
+      # If qstr is a string, it uses it as the query string itself.
+      # 
+      def qstring(src,qstr)
+        src += '?v=' + Time.now.to_i.to_s if qstr == true
+        src += '?v=' + qstr if qstr.is_a? String
+        src
       end
     end
   end
