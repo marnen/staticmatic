@@ -9,11 +9,9 @@ module StaticMatic
       # or specific stylesheets in a specific order
       # = stylesheets :reset, :application
       # Can also pass options hash in at the end so you can specify :media => :print
-      def stylesheets(*params, options)
-        unless options.is_a? Hash
-          params.push(options)
-          options = {}
-        end
+      def stylesheets(*params)
+        options = if params.last.is_a? Hash; params.pop else {} end
+        
         options[:media] = 'all' unless options.has_key?(:media)
         options[:rel] = 'stylesheet'; options[:type] = 'text/css'
 
@@ -79,11 +77,8 @@ module StaticMatic
       #
       # javascripts('test')   ->   <script language="javascript" src="javascripts/test.js"></script>
       #    
-      def javascripts(*files, options)
-        unless options.is_a? Hash
-          files.push(options)
-          options = {}
-        end
+      def javascripts(*files)
+        options = if params.last.is_a? Hash; params.pop else {} end
         relative_path = current_page_relative_path
 
         output = ""
