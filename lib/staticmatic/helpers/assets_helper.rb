@@ -78,7 +78,7 @@ module StaticMatic
       # javascripts('test')   ->   <script language="javascript" src="javascripts/test.js"></script>
       #    
       def javascripts(*files)
-        options = if params.last.is_a? Hash; params.pop else {} end
+        options = if files.last.is_a? Hash; files.pop else {} end
         relative_path = current_page_relative_path
 
         output = ""
