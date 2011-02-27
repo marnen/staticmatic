@@ -107,8 +107,8 @@ module StaticMatic
       # If qstr is a string, it uses it as the query string itself.
       # 
       def qstring(src,qstr)
-        src += '?v=' + Time.now.to_i.to_s if qstr == true
-        src += '?v=' + qstr if qstr.is_a? String
+        src += '?_=' + Time.now.to_i.to_s if qstr == true
+        src += '?_=' + qstr if qstr.is_a? String
         src
       end
     end
