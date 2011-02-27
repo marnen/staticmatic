@@ -43,7 +43,7 @@ module StaticMatic::BuildMixin
   end
   
   def copy_images
-    img_exts = ['giff,jpg,jpeg,png,tiff'];
+    img_exts = ['gif,jpg,jpeg,png,tiff'];
     Dir["#{@src_dir}/images/**/*.{#{ img_exts.join(',') }}"].each do |path|
       file_dir, file_name = File.split(path.sub(/^#{@src_dir}\/images/, ''))
       copy_file(path, File.join(@site_dir, 'images', file_dir, file_name))
