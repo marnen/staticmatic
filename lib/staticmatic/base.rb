@@ -23,8 +23,8 @@ module StaticMatic
       @src_dir = File.join(@base_dir, "src")
       @site_dir = File.join(@base_dir, "site")
       
-      if File.exists?(File.join(@src_dir, "layouts", "application.haml"))
-        puts "DEPRECATION: layouts/application.haml will be renamed to layouts/default.haml in 0.12.0"
+      if File.exists?(File.join(@src_dir, "_layouts", "application.haml"))
+        puts "DEPRECATION: _layouts/application.haml will be renamed to _layouts/default.haml in 0.12.0"
         @default_layout = "application"
       else
         @default_layout = "default"
@@ -95,7 +95,7 @@ module StaticMatic
     end
     
     def full_layout_path(name)
-      File.join(@src_dir, "layouts", "#{name}.haml")
+      File.join(@src_dir, "_layouts", "#{name}.haml")
     end
     
     def configure_compass

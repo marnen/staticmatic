@@ -59,7 +59,7 @@ module StaticMatic::RenderMixin
     partial_path = File.join(@src_dir, 'pages', partial_dir, partial_name)
     unless File.exists?(partial_path)
       # couldn't find it in the pages subdirectory tree so try old way (ignoring the path)
-      partial_dir = 'partials'
+      partial_dir = '_partials'
       partial_name = "#{File.basename(name)}"
       partial_name += ".haml" unless partial_type
       partial_path = File.join(@src_dir, partial_dir, partial_name)
