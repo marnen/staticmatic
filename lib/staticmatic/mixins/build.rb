@@ -9,17 +9,16 @@ module StaticMatic::BuildMixin
     
   # Build HTML from the source files
   def build_html
-    Dir["#{@src_dir}/pages/**/*.haml"].each do |path|
-      next if File.basename(path) =~ /^\_/  # skip partials
-      file_dir, template = source_template_from_path(path.sub(/^#{@src_dir}\/pages/, ''))
+    src_file_paths('haml').each do |path|
+      file_dir, template = source_template_from_path(path.sub(/^#{@src_dir}/, ''))
       save_page(File.join(file_dir, template), generate_html_with_layout(template, file_dir))
     end
   end
 
   # Build CSS from the source files
   def build_css
-    Dir["#{@src_dir}/stylesheets/**/*.{sass,scss}"].each do |path|
-      file_dir, template = source_template_from_path(path.sub(/^#{@src_dir}\/stylesheets/, ''))
+    src_file_paths('sass','scss').each do |path|
+      file_dir, template = source_template_from_path(path.sub(/^#{@src_dir}/, ''))
       
       if !template.match(/(^|\/)\_/)
         save_stylesheet(File.join(file_dir, template), generate_css(template, file_dir))
@@ -30,22 +29,21 @@ module StaticMatic::BuildMixin
   def build_js
     coffee_found = ENV['PATH'].split(':').inject(false) { |found, folder| found |= File.exists?("#{folder}/coffee") }
     if coffee_found
-      Dir["#{@src_dir}/javascripts/**/*.coffee"].each do |path|
-        file_dir, template = source_template_from_path(path.sub(/^#{@src_dir}\/javascripts/, ''))
+      src_file_paths('coffee').each do |path|
+        file_dir, template = source_template_from_path(path.sub(/^#{@src_dir}/, ''))
         save_javascript(File.join(file_dir, template), generate_js(template, file_dir))
       end
     end
     # copy normal javascript files over
-    Dir["#{@src_dir}/javascripts/**/*.js"].each do |path|
-      file_dir, template = source_template_from_path(path.sub(/^#{@src_dir}\/javascripts/, ''))
-      copy_file(path, File.join(@site_dir, 'javascripts', file_dir, "#{template}.js"))
+    src_file_paths('js').each do |path|
+      file_dir, template = source_template_from_path(path.sub(/^#{@src_dir}/, ''))
+      copy_file(path, File.join(@site_dir, file_dir, "#{template}.js"))
     end
   end
   
   def copy_images
-    img_exts = ['gif,jpg,jpeg,png,tiff'];
-    Dir["#{@src_dir}/images/**/*.{#{ img_exts.join(',') }}"].each do |path|
-      file_dir, file_name = File.split(path.sub(/^#{@src_dir}\/images/, ''))
+    src_file_paths(*%w{gif jpg jpef png tiff}).each do |path|
+      file_dir, file_name = File.split(path.sub(/^#{@src_dir}/, ''))
       copy_file(path, File.join(@site_dir, 'images', file_dir, file_name))
     end
   end
@@ -60,11 +58,11 @@ module StaticMatic::BuildMixin
   end
 
   def save_stylesheet(filename, content)
-    generate_site_file(File.join('stylesheets', filename), 'css', content)
+    generate_site_file(filename, 'css', content)
   end
 
   def save_javascript(filename, content)
-    generate_site_file(File.join('javascripts', filename), 'js', content)
+    generate_site_file(filename, 'js', content)
   end
 
   def generate_site_file(filename, extension, content)

@@ -76,22 +76,18 @@ module StaticMatic
       
     # TODO: DRY this _exists? section up
     def template_exists?(name, ext, dir = '')
-      # TODO: generate this data from a config file or something
-      path = {
-        'html' => [['pages',       dir, "#{name}.haml"]],
-        'css'  => [['stylesheets', dir, "#{name}.sass"],
-                   ['stylesheets', dir, "#{name}.scss"]],
-        'js'   => [['javascripts', dir, "#{name}.coffee"]]
-      }
-      path[ext] && path[ext].map {|p| File.exists? File.join(@src_dir, *p) }.any?
+      if ext == 'html'
+        src_file_names('haml').include? "#{name}.haml"
+      elsif ext == 'css'
+        (src_file_names('sass').include? "#{name}.sass") ||
+        (src_file_names('scss').include? "#{name}.scss")
+      elsif ext == 'js'
+        src_file_names('coffee').include? "#{name}.coffee"
+      end
     end
     
     def layout_exists?(name)
       File.exists? full_layout_path(name)
-    end
-    
-    def template_directory?(path)
-      File.directory?(File.join(@src_dir, 'pages', path))
     end
     
     def full_layout_path(name)
@@ -109,5 +105,19 @@ module StaticMatic
 
       configuration.sass_options.merge!(Compass.configuration.to_sass_engine_options)
     end
+    
+    # TODO OPTIMIZE: caching, maybe?
+    def src_file_paths(*exts)
+      Dir["#{@src_dir}/**/*.{#{ exts.join(',') }}"].reject do |path|
+        # reject any files with a prefixed underscore, as
+        # well as any files in a folder with a prefixed underscore
+        path.split('/').map {|x| x.match('^\_')}.any?
+      end
+    end
+    
+    def src_file_names(*exts)
+      src_file_paths(*exts).map {|p| File.split(p)[1]}
+    end
+    
   end
 end

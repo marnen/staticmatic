@@ -12,10 +12,6 @@ module StaticMatic
       path_info = env["PATH_INFO"]
 
       file_dir, file_name, file_ext = expand_path(path_info)
-
-      # remove stylesheets/ and javascripts/ directory if applicable
-      file_dir.gsub!(/^\/stylesheets\/?/, "")
-      file_dir.gsub!(/^\/javascripts\/?/, "")
       
       file_dir = CGI::unescape(file_dir)
       file_name = CGI::unescape(file_name)
@@ -33,6 +29,7 @@ module StaticMatic
         if file_ext == "css"
           res.write @staticmatic.generate_css(file_name, file_dir)
         elsif file_ext == "js"
+          res.header["Content-Type"] = "text/javascript"
           res.write @staticmatic.generate_js(file_name, file_dir)
         else
           res.write @staticmatic.generate_html_with_layout(file_name, file_dir)
@@ -75,7 +72,7 @@ module StaticMatic
 
       if extname.empty?
         dir = File.join(dirname, filename)
-        is_dir = path_info[-1, 1] == '/' || (@staticmatic.template_directory?(dir) && !@staticmatic.template_exists?(filename, extname, dirname))
+        is_dir = path_info[-1, 1] == '/'
         if is_dir
           dirname = dir
           filename = 'index'

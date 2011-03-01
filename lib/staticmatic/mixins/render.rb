@@ -19,7 +19,7 @@ module StaticMatic::RenderMixin
   # Generate html from source file:
   # generate_html("index")
   def generate_html(source_file, source_dir = '')
-    full_file_path = File.join(@src_dir, 'pages', source_dir, "#{source_file}.haml")
+    full_file_path = File.join(@src_dir, source_dir, "#{source_file}.haml")
 
     begin
 
@@ -56,7 +56,7 @@ module StaticMatic::RenderMixin
     partial_name = "_#{partial_name}"
     partial_name += ".haml" unless partial_type
 
-    partial_path = File.join(@src_dir, 'pages', partial_dir, partial_name)
+    partial_path = File.join(@src_dir, partial_dir, partial_name)
     unless File.exists?(partial_path)
       # couldn't find it in the pages subdirectory tree so try old way (ignoring the path)
       partial_dir = '_partials'
@@ -85,12 +85,11 @@ module StaticMatic::RenderMixin
   end
 
   def generate_css(source, source_dir = '')
-    # full_file_path = File.join(@src_dir, 'stylesheets', source_dir, "#{source}.sass")
-    full_file_path = Dir[File.join(@src_dir, 'stylesheets', source_dir, "#{source}.{sass,scss}")].first
+    full_file_path = Dir[File.join(@src_dir, source_dir, "#{source}.{sass,scss}")].first
 
     if full_file_path && File.exist?(full_file_path)
       begin
-        sass_options = { :load_paths => [ File.join(@src_dir, 'stylesheets') ] }.merge(self.configuration.sass_options)
+        sass_options = { :load_paths => [ @src_dir ] }.merge(self.configuration.sass_options)
       
         if File.extname(full_file_path) == ".scss"
           sass_options[:syntax] = :scss
@@ -107,7 +106,7 @@ module StaticMatic::RenderMixin
   end
 
   def generate_js(source, source_dir = '')
-    full_file_path = File.join(@src_dir, 'javascripts', source_dir, "#{source}.coffee")
+    full_file_path = File.join(@src_dir, source_dir, "#{source}.coffee")
 
     coffee_options = "#{self.configuration.coffee_options} -p"
     javascript = `coffee #{coffee_options} #{full_file_path}`

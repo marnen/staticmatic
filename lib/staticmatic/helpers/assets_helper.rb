@@ -1,4 +1,3 @@
-
 module StaticMatic
   module Helpers
     module AssetsHelper
@@ -10,66 +9,26 @@ module StaticMatic
       # = stylesheets :reset, :application
       # Can also pass options hash in at the end so you can specify :media => :print
       def stylesheets(*params)
-        options = if params.last.is_a? Hash; params.pop else {} end
+        options = if params.last.is_a? Hash; params.pop else {} end # clean up
         
         options[:media] = 'all' unless options.has_key?(:media)
         options[:rel] = 'stylesheet'; options[:type] = 'text/css'
 
-        relative_path = current_page_relative_path
-
+        src_files = @staticmatic.src_file_paths('sass','scss','css')
         output = ""
-        if params.length == 0
-          # no specific files requested so include all in no particular order
-          stylesheet_dir = File.join(@staticmatic.src_dir, 'stylesheets')
-          stylesheet_directories = Dir[File.join(stylesheet_dir, '**','*.{sass,scss}')]
-          
-          # Bit of a hack here - adds any stylesheets that exist in the site/ dir that haven't been generated from source sass
-          Dir[File.join(@staticmatic.site_dir, 'stylesheets', '*.css')].each do |filename|
-            search_filename = File.basename(filename).chomp(File.extname(filename))
-            puts search_filename
-            already_included = false
-            stylesheet_directories.each do |path|
-              if File.basename(path).include?(search_filename)
-                already_included = true
-                break
-              end
-            end
-            
-            stylesheet_directories << filename unless already_included
-          end
 
-          stylesheet_directories.each do |path|
-            
-            filename_without_extension = File.basename(path).chomp(File.extname(path))
-            
-            if !filename_without_extension.match(/^\_/)
-              
-              path = path.gsub(/#{@staticmatic.src_dir}/, "").
-                          gsub(/#{@staticmatic.site_dir}/, "").
-                          gsub(/#{filename_without_extension}\.(sass|scss|css)/, "")
-                          
-              src = File.join(relative_path, path, "#{filename_without_extension}.css")
-              src = qstring(src, options[:qstring])
-              options[:href] = src
-              options.delete(:qstring)
-              output << tag(:link, options)
-            end
-          end
+        if params.length == 0
+          # no specified files; include them all!
+          src_files.each {|path| output << format_output(:link,path,options) }
         else
-          #specific files requested and in a specific order
+          # specific files requested and in a specific order
           params.each do |file|
-            if File.exist?(File.join(@staticmatic.src_dir, 'stylesheets', "#{file}.sass")) ||
-               File.exist?(File.join(@staticmatic.src_dir, 'stylesheets', "#{file}.scss")) || 
-               File.exist?(File.join(@staticmatic.site_dir, 'stylesheets', "#{file}.css"))
-              src = File.join(relative_path, "stylesheets", "#{file}.css")
-              src = qstring(src, options[:qstring])
-              options[:href] = src
-              options.delete(:qstring)
-              output << tag(:link, options)
+            idx = src_files.index do |src|
+              %w{sass scss css}.map {|t| src.match /#{file}\.#{t}$/ }.any?
             end
+            output << format_output(:link,src_files[idx],options) unless idx.nil?
           end
         end
-        
         output
       end
       
@@ -78,15 +37,23 @@ module StaticMatic
       # javascripts('test')   ->   <script language="javascript" src="javascripts/test.js"></script>
       #    
       def javascripts(*files)
-        options = if files.last.is_a? Hash; files.pop else {} end
-        relative_path = current_page_relative_path
-
+        options = if files.last.is_a? Hash; files.pop else {} end # clean up
+        
+        options[:language] = 'javascript'
+        options[:type] = 'text/javascript'
+        
+        src_files = @staticmatic.src_file_paths('js','coffee')
         output = ""
-        files.each do |file|
-          file_str = file.to_s
-          src = file_str.match(%r{^((\.\.?)?/|https?://)}) ? file_str : "#{relative_path}javascripts/#{file_str}.js"
-          src = qstring(src, options[:qstring])
-          output << tag(:script, :language => 'javascript', :src => src, :type => "text/javascript") { "" }
+
+        files.each do |path|
+          if File.basename(path.to_s).match %r{^((\.\.?)?/|https?://)}
+            output << format_output(:script,path,options)
+          else
+            idx = src_files.index do |src|
+              %w{coffee js}.map {|t| src.match /#{path.to_s}\.#{t}$/ }.any?
+            end
+            output << format_output(:script,src_files[idx],options) unless idx.nil?
+          end
         end
         output
       end
@@ -100,6 +67,27 @@ module StaticMatic
         options[:src] = name.match(%r{^((\.\.?)?/|https?://)}) ? name : "#{current_page_relative_path}images/#{name}"
         options[:alt] ||= name.split('/').last.split('.').first.capitalize.gsub(/_|-/, ' ')
         tag :img, options
+      end
+      
+      def format_output(tag_type,path,options)
+        filename_without_extension = File.basename(path).chomp(File.extname(path))
+      
+        path = path.gsub(/#{@staticmatic.src_dir}/, "").
+                    gsub(/#{@staticmatic.site_dir}/, "").
+                    gsub(/#{filename_without_extension}\.(sass|scss|css|js|coffee)/, "")
+
+        src = File.join(current_page_relative_path, path, "#{filename_without_extension}")
+        
+        if tag_type == :link
+          src += '.css'
+          options[:href] = qstring(src, options[:qstring]); options.delete :qstring
+          tag(tag_type,options)
+        elsif tag_type == :script
+          src += '.js'
+          options[:src] = qstring(src, options[:qstring]); options.delete :qstring
+          tag(tag_type,options) { '' }
+        end
+        
       end
       
       # Prepares a query string based on the given qstr.
