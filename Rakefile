@@ -13,13 +13,12 @@ begin
     gem.homepage = "http://staticmatic.net"
     gem.description = "Lightweight Static Site Framework"
     gem.authors = ["Stephen Bartholomew"]
-    gem.rubyforge_project = "staticmatic"
     
     gem.files.include "[A-Z]*", "{bin,lib,spec}/**/*"
     gem.files.exclude "spec/sandbox/tmp", "spec/sandbox/test_site/site/*"
     gem.add_dependency("haml", ">=2.0.0")
     gem.add_dependency("rack", ">=1.0")
-    gem.add_dependency("compass", ">=0.10.0")
+    gem.add_dependency("thor", ">=0.14.6")
   end
 rescue LoadError
   puts "Jeweler, or one of its dependencies, is not available. Install it with: gem install jeweler"

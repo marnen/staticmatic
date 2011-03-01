@@ -1,16 +1,117 @@
 #!/usr/bin/env ruby
 
+require 'rubygems'
+require 'thor'
 require File.dirname(__FILE__) + '/../lib/staticmatic'
 
-command = ARGV[0]
-directory = ARGV[1]
+# Directly taken from Monk (https://github.com/monkrb/monk). Thanks Monk!
+class StaticExe < Thor
+  include Thor::Actions
 
-if !command || !directory
-  puts "Usage: #{$0} <build|setup|preview> <directory>"
-  exit
+  [:skip, :pretend, :force, :quiet].each do |task|
+    class_options.delete task
+  end
+
+  # functions related to initializing a project
+
+  desc "init", "Initialize a static directory structure"
+  method_option :skeleton, :type => :string, :aliases => "-s"
+  def init(target = ".")
+    clone(source(options[:skeleton] || "default") || options[:skeleton], target) ?
+      cleanup(target) :
+      say_status(:error, clone_error(target))
+  end
+
+  desc "show NAME", "Display the repository address for NAME"
+  def show(name)
+    say_status name, source(name) || "repository not found"
+  end
+
+  desc "list", "Lists the configured repositories"
+  def list
+    sm_config.keys.sort.each do |key|
+      show(key)
+    end
+  end
+
+  desc "add NAME REPOSITORY", "Add the repository to the configuration file"
+  def add(name, repository)
+    sm_config[name] = repository
+    write_sm_config_file
+  end
+
+  desc "rm NAME", "Remove the repository from the configuration file"
+  def rm(name)
+    sm_config.delete(name)
+    write_sm_config_file
+  end
+
+  # Previewing and building an existing project
+  
+  desc "preview DIRECTORY", "Start a web server to preview your project"
+  def preview(directory = '.')
+    staticmatic = StaticMatic::Base.new(directory)
+    $:.push File.join(directory, "lib")
+    staticmatic.run('preview')
+  end
+  
+  desc "build DIRECTORY", "Build your project into a freshly generated site/ folder"
+  def build(directory = '.')
+    staticmatic = StaticMatic::Base.new(directory)
+    $:.push File.join(directory, "lib")
+    staticmatic.run('build')
+  end
+
+private
+
+  def clone(source, target)
+    if Dir["#{target}/*"].empty?
+      say_status :fetching, source
+      system "git clone -q --depth 1 #{source} #{target}"
+      $?.success?
+    end
+  end
+
+  def cleanup(target)
+    inside(target) { remove_file ".git" }
+    say_status :initialized, target
+  end
+
+  def source(name = "default")
+    sm_config[name]
+  end
+
+  def sm_config_file
+    @sm_config_file ||= File.join(sm_home, ".staticmatic")
+  end
+
+  def sm_config
+    @sm_config ||= begin
+      write_sm_config_file unless File.exists?(sm_config_file)
+      YAML.load_file(sm_config_file)
+    end
+  end
+
+  def write_sm_config_file
+    remove_file(sm_config_file, :verbose => false)
+    create_file(sm_config_file, nil, :verbose => false) do
+      config = @sm_config || { "default" => "git://github.com/mindeavor/staticmatic-basic.git" }
+      config.to_yaml
+    end
+  end
+
+  def self.source_root
+    "."
+  end
+
+  def clone_error(target)
+    "Couldn't clone repository into target directory '#{target}'. " +
+    "You must have git installed and the target directory must be empty."
+  end
+
+  def sm_home
+    ENV["STATICMATIC_HOME"] || File.join(Thor::Util.user_home)
+  end
 end
 
-$:.push File.join(directory, "lib")
-
-staticmatic = StaticMatic::Base.new(directory)
-staticmatic.run(command)
+StaticExe.start
