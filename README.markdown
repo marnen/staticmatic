@@ -29,7 +29,7 @@ When you're ready to deploy, convert your haml/sass/whatever files into plain ht
 
     staticmatic build
     
-This will convert everything into the newly generated `site/` folder.
+This will convert everything into a freshly generated `site/` folder.
 
 ## Where do I put my files?
 
@@ -57,7 +57,7 @@ However, there are a few (useful) exceptions:
 
 Partials are searched for in the following order:
 
-- The file's current directory (the file must be prefixed with an underscore)
+- The file's current directory (the file must be prefixed with an underscore in this case)
 - `src/_partials/`
 
 Examples:
@@ -79,7 +79,7 @@ Examples:
 Force the browser to ignore its cache whenever you damn well feel like it:
 
     # Creates a query string based on the current unix time
-    javascripts :menu, :form, :qstring => true
+    stylesheets :menu, :form, :qstring => true
     
     <link href="/css/menu.css?_=1298789103" media="all" rel="stylesheet" type="text/css"/>
     <link href="/css/form.css?_=1298789103" media="all" rel="stylesheet" type="text/css"/>
@@ -87,5 +87,5 @@ Force the browser to ignore its cache whenever you damn well feel like it:
     
     # Or, use your own qstring
     javascripts :app, :qstring => '2.0.6'
-    
-    <link href="/css/app.css?_=2.0.6" media="all" rel="stylesheet" type="text/css"/>
+
+    <script language="javascript" src="js/app.js?_=2.0.6" type="text/javascript"></script>
