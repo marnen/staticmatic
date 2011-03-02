@@ -1,52 +1,91 @@
 # StaticMatic
 
-*For information on Haml & Sass please see [haml.hamptoncatlin.com](http://haml.hamptoncatlin.com)*.
+Build static websites using modern dynamic tools:
 
-## What's it all about?
+- [Haml](http://haml-lang.com/)
+- [Sass](http://sass-lang.com/)
+- [Coffeescript](http://jashkenas.github.com/coffee-script/)
+- [Compass](compass-style.org)
+- And more to come.
 
-CMS is overrated.  A lot of the time, clients want us to do what we do 
-best - well designed pages with structured, accessible and maintainable markup & styling.
+## Quick Start
 
-CMSs are often perfect for this, but sometimes they can be restrictive and more cumbersome
-than just working with good ol' source code.  At the same time we want our code to be
-structured, DRY and flexible.
+Instantly setup a new project:
 
-Enter **StaticMatic**.
+    $ staticmatic init my-project
 
-## Usage
+Preview your static website:
 
-StaticMatic will set up a basic site structure for you with this command:
+    $ cd my-project
+    $ staticmatic preview
+    Site root is: .
+    StaticMatic Preview Server
+    Ctrl+C to exit
+    ...
 
-    staticmatic setup <directory>
+Visit http://localhost:3000 to view your website in action.
 
-After this command you'll have the following files:
+When you're ready to deploy, convert your haml/sass/whatever files into plain html, css, and javascript:
 
-    <directory>/
-      site/
-        images/
-        stylesheets/
-        javascripts/
-      src/
-        config/
-          site.rb
-        helpers/
-        layouts/
-          default.haml
-        pages/
-          index.haml
-        stylesheets/
-          application.sass
-
-StaticMatic sets you up with a sample layout, stylesheet and page file.  Once you've
-edited the pages and stylesheets, you can generate the static site:
-
-    staticmatic build <directory>
+    staticmatic build
     
-All of the pages are parsed and wrapped up in default.haml and put into the site directory.
+This will convert everything into the newly generated `site/` folder.
 
-## Templates
+## Where do I put my files?
 
-StaticMatic adds a few helpers to the core Haml helpers:
+Anywhere in your `src` folder. For example:
 
-    = link 'Title', 'url'
-    = img 'my_image.jpg'
+- `src/js/classes/Player.coffee` will be converted into `site/js/classes/Player.js`.
+- `src/images/logo.png` will be directly copied into `site/images/logo.png`
+
+However, there are a few (useful) exceptions:
+
+## Special Folders
+
+    <my-project>/
+      src/
+        _layouts/
+        _partials/
+
+- The `_layouts` folder is where layout files will be searched for. These files must contain a `yield` statement.
+
+- The `_partials` folder is the last place partial files will be searched for. Any partial in this folder should not be prefixed with an underscore _
+
+*USEFUL:* Any file or folder prefixed with an underscore _ will not be copied into the generated `site/` folder, nor will they be converted by haml, coffeescript, etc
+
+## Partials
+
+Partials are searched for in the following order:
+
+- The file's current directory (the file must be prefixed with an underscore)
+- `src/_partials/`
+
+Examples:
+
+    # Searches for the default rendering engine file type
+    = partial 'sidebar'
+    
+    # Equivalent to the above statement
+    = partial 'sidebar.haml'
+    
+    # Directly inserts html file
+    = partial 'help-content.html'
+    
+    # Use your own directory structure
+    = partial 'blog-content/2011/vacation.html'
+
+## Anti-Cache
+
+Force the browser to ignore its cache whenever you damn well feel like it:
+
+    # Creates a query string based on the current unix time
+    javascripts :menu, :form, :qstring => true
+    
+    <link href="/css/menu.css?_=1298789103" media="all" rel="stylesheet" type="text/css"/>
+    <link href="/css/form.css?_=1298789103" media="all" rel="stylesheet" type="text/css"/>
+    
+    
+    # Or, use your own qstring
+    javascripts :app, :qstring => '2.0.6'
+    
+    <link href="/css/app.css?_=2.0.6" media="all" rel="stylesheet" type="text/css"/>
