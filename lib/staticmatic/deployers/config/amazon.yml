@@ -1,0 +1,7 @@
+AccessKeys:
+  :access_key_id: Your-access-key-here
+  :secret_access_key: Your-secres-access-key-here
+
+Buckets:
+  development: Your-development-bucket
+  production: Your-production-bucket

@@ -2,9 +2,13 @@
 
 require 'rubygems'
 require 'thor'
-require File.dirname(__FILE__) + '/../lib/staticmatic'
+lib_dir = File.dirname(__FILE__) + '/../lib/staticmatic'
+require lib_dir
+Dir[File.join lib_dir,'deployers','*.rb'].each do |deployer|
+  require deployer
+end
 
-# Directly taken from Monk (https://github.com/monkrb/monk). Thanks Monk!
+# Skeletons directly taken from Monk (https://github.com/monkrb/monk). Thanks Monk!
 class StaticExe < Thor
   include Thor::Actions
 
@@ -13,6 +17,11 @@ class StaticExe < Thor
   end
 
   # functions related to initializing a project
+
+  desc "one", "two"
+  def one_two
+    puts 'one two'
+  end
 
   desc "init", "Initialize a static directory structure"
   method_option :skeleton, :type => :string, :aliases => "-s"
@@ -50,6 +59,7 @@ class StaticExe < Thor
   
   desc "preview DIRECTORY", "Start a web server to preview your project"
   def preview(directory = '.')
+    say 'Launching preview server...', :cyan
     staticmatic = StaticMatic::Base.new(directory)
     $:.push File.join(directory, "lib")
     staticmatic.run('preview')
@@ -57,12 +67,21 @@ class StaticExe < Thor
   
   desc "build DIRECTORY", "Build your project into a freshly generated site/ folder"
   def build(directory = '.')
+    say 'Building website...', :cyan
     staticmatic = StaticMatic::Base.new(directory)
     $:.push File.join(directory, "lib")
     staticmatic.run('build')
   end
 
 private
+
+  def lib_path(*paths)
+    File.join(File.dirname(__FILE__) + '/../lib/staticmatic', *paths)
+  end
+
+  def site_path(directory,*paths)
+    File.join(directory, 'site', *paths)
+  end
 
   def clone(source, target)
     if Dir["#{target}/*"].empty?
@@ -112,6 +131,10 @@ private
   def sm_home
     ENV["STATICMATIC_HOME"] || File.join(Thor::Util.user_home)
   end
+end
+
+if File.exists?("Thorfile")
+  load("Thorfile")
 end
 
 StaticExe.start
