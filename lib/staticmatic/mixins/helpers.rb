@@ -2,7 +2,7 @@ module StaticMatic::HelpersMixin
   # Loads any helpers present in the helpers dir and mixes them into the template helpers
   def load_helpers
 
-    Dir["#{@src_dir}/helpers/**/*_helper.rb"].each do |helper|
+    Dir["#{@src_dir}/_helpers/**/*_helper.rb"].each do |helper|
       load_helper(helper)
     end
   end
