@@ -8,11 +8,32 @@ Build static websites using modern dynamic tools:
 - [Compass](compass-style.org)
 - And more to come.
 
+In other words:
+
+                        StaticMatic
+    src/                    ==>           site/
+      index.haml            ==>             index.html
+      style.sass            ==>             style.css
+      js/                   ==>             js/
+        app.coffee          ==>               app.js
+      img/                  ==>             img/
+        logo.png            ==>               logo.png
+
 ## Quick Start
 
 Instantly setup a new project:
 
     $ staticmatic init my-project
+
+This will give you a basic skeleton:
+
+    my-project/
+      src/
+        _layouts/
+          default.haml
+        _partials/
+          example.haml
+        index.haml
 
 Preview your static website:
 
@@ -29,16 +50,7 @@ When you're ready to deploy, convert your haml/sass/whatever files into plain ht
 
     staticmatic build
     
-This will convert everything into a freshly generated `site/` folder.
-
-## Where do I put my files?
-
-Anywhere in your `src` folder. For example:
-
-- `src/js/classes/Player.coffee` will be converted into `site/js/classes/Player.js`.
-- `src/images/logo.png` will be directly copied into `site/images/logo.png`
-
-However, there are a few (useful) exceptions:
+This will convert everything into a freshly generated `site/` folder, all ready to deploy!
 
 ## Special Folders
 
