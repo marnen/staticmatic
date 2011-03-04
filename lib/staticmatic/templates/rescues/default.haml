@@ -1,0 +1,7 @@
+%h1= @exception.class.name
+
+%p= @exception.message
+
+%h2 Stack Trace
+
+= @exception.backtrace.join("<br/>")
