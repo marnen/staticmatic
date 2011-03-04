@@ -23,10 +23,15 @@ module StaticMatic
         else
           # specific files requested and in a specific order
           params.each do |file|
-            idx = src_files.index do |src|
-              %w{sass scss css}.map {|t| src.match /#{file}\.#{t}$/ }.any?
+
+            if file.to_s.match %r{^https?://}
+              output << format_output(:link,file,options)
+            else
+              idx = src_files.index do |src|
+                %w{sass scss css}.map {|t| src.match /#{file}\.#{t}$/ }.any?
+              end
+              output << format_output(:link,src_files[idx],options) unless idx.nil?
             end
-            output << format_output(:link,src_files[idx],options) unless idx.nil?
           end
         end
         output
@@ -46,7 +51,8 @@ module StaticMatic
         output = ""
 
         files.each do |path|
-          if File.basename(path.to_s).match %r{^((\.\.?)?/|https?://)}
+          puts "path: #{path}"
+          if path.to_s.match %r{^https?://}
             output << format_output(:script,path,options)
           else
             idx = src_files.index do |src|
@@ -70,20 +76,26 @@ module StaticMatic
       end
       
       def format_output(tag_type,path,options)
-        filename_without_extension = File.basename(path).chomp(File.extname(path))
-      
-        path = path.gsub(/#{@staticmatic.src_dir}/, "").
-                    gsub(/#{@staticmatic.site_dir}/, "").
-                    gsub(/#{filename_without_extension}\.(sass|scss|css|js|coffee)/, "")
+        external_url = !!path.match(%r{^https?://})
 
-        src = File.join(current_page_relative_path, path, "#{filename_without_extension}")
+        if external_url
+          src = path
+        else
+          filename_without_extension = File.basename(path).chomp(File.extname(path))
+      
+          path = path.gsub(/#{@staticmatic.src_dir}/, "").
+                      gsub(/#{@staticmatic.site_dir}/, "").
+                      gsub(/#{filename_without_extension}\.(sass|scss|css|js|coffee)/, "")
+
+          src = File.join(current_page_relative_path, path, "#{filename_without_extension}")
+        end
         
         if tag_type == :link
-          src += '.css'
+          src += '.css' if !external_url
           options[:href] = qstring(src, options[:qstring]); options.delete :qstring
           tag(tag_type,options)
         elsif tag_type == :script
-          src += '.js'
+          src += '.js' if !external_url
           options[:src] = qstring(src, options[:qstring]); options.delete :qstring
           tag(tag_type,options) { '' }
         end
