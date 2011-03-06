@@ -82,6 +82,10 @@ private
   def site_path(directory,*paths)
     File.join(directory, 'build', *paths)
   end
+  
+  def build_files(directory)
+    Dir[site_path(directory,'**/*')].reject {|file| File.directory? file}
+  end
 
   def clone(source, target)
     if Dir["#{target}/*"].empty?

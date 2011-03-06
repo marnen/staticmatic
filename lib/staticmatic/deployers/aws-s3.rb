@@ -11,7 +11,7 @@ class StaticExe < Thor
     
     invoke :build, directory unless options[:skip_build]
     
-    if Dir[site_path(directory,'*')].empty?
+    if build_files(directory).empty?
       say 'Your build/ folder is empty', :red
       say 'Nothing to do.'
       return
@@ -35,7 +35,8 @@ class StaticExe < Thor
       return
     end
 
-    Dir[site_path(directory,'*')].each do |file|
+    puts build_files(directory).inspect
+    build_files(directory).each do |file|
       contents = File.read file
       s3path = file.sub(%r{^\./build/},'')
       
