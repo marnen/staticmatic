@@ -9,7 +9,7 @@ module StaticMatic
       # = stylesheets :reset, :application
       # Can also pass options hash in at the end so you can specify :media => :print
       def stylesheets(*params)
-        options = if params.last.is_a? Hash; params.pop else {} end # clean up
+        options = (params.last.is_a? Hash) ? params.pop : {}
         
         options[:media] = 'all' unless options.has_key?(:media)
         options[:rel] = 'stylesheet'; options[:type] = 'text/css'
@@ -42,7 +42,7 @@ module StaticMatic
       # javascripts('test')   ->   <script language="javascript" src="javascripts/test.js"></script>
       #    
       def javascripts(*files)
-        options = if files.last.is_a? Hash; files.pop else {} end # clean up
+        options = (files.last.is_a? Hash) ? files.pop : {}
         
         options[:language] = 'javascript'
         options[:type] = 'text/javascript'
@@ -51,7 +51,6 @@ module StaticMatic
         output = ""
 
         files.each do |path|
-          puts "path: #{path}"
           if path.to_s.match %r{^https?://}
             output << format_output(:script,path,options)
           else

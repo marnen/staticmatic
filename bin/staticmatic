@@ -1,8 +1,9 @@
 #!/usr/bin/env ruby
-
 require 'rubygems'
 require 'thor'
+
 lib_dir = File.dirname(__FILE__) + '/../lib/staticmatic'
+
 require lib_dir
 Dir[File.join lib_dir,'deployers','*.rb'].each do |deployer|
   require deployer
@@ -17,11 +18,6 @@ class StaticExe < Thor
   end
 
   # functions related to initializing a project
-
-  desc "one", "two"
-  def one_two
-    puts 'one two'
-  end
 
   desc "init", "Initialize a static directory structure"
   method_option :skeleton, :type => :string, :aliases => "-s"
