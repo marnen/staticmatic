@@ -21,7 +21,7 @@ module StaticMatic
       @current_file_stack = []
       @base_dir = base_dir
       @src_dir = File.join(@base_dir, "src")
-      @site_dir = File.join(@base_dir, "site")
+      @site_dir = File.join(@base_dir, "build")
       
       if File.exists?(File.join(@src_dir, "_layouts", "application.haml"))
         puts "DEPRECATION: _layouts/application.haml will be renamed to _layouts/default.haml in 0.12.0"

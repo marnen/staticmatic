@@ -12,7 +12,7 @@ class StaticExe < Thor
     invoke :build, directory unless options[:skip_build]
     
     if Dir[site_path(directory,'*')].empty?
-      say 'Your site/ folder is empty', :red
+      say 'Your build/ folder is empty', :red
       say 'Nothing to do.'
       return
     end
@@ -37,7 +37,7 @@ class StaticExe < Thor
 
     Dir[site_path(directory,'*')].each do |file|
       contents = File.read file
-      s3path = file.sub(%r{^\./site/},'')
+      s3path = file.sub(%r{^\./build/},'')
       
       say "      upload ", :cyan; say s3path
       AWS::S3::S3Object.store(s3path, contents, bucket_name, :access => :public_read)

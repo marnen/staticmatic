@@ -65,7 +65,7 @@ class StaticExe < Thor
     staticmatic.run('preview')
   end
   
-  desc "build DIRECTORY", "Build your project into a freshly generated site/ folder"
+  desc "build DIRECTORY", "Build your project into a freshly generated build/ folder"
   def build(directory = '.')
     say 'Building website...', :cyan
     staticmatic = StaticMatic::Base.new(directory)
@@ -80,7 +80,7 @@ private
   end
 
   def site_path(directory,*paths)
-    File.join(directory, 'site', *paths)
+    File.join(directory, 'build', *paths)
   end
 
   def clone(source, target)
