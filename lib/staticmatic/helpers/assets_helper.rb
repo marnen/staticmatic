@@ -82,8 +82,8 @@ module StaticMatic
         else
           filename_without_extension = File.basename(path).chomp(File.extname(path))
       
-          path = path.gsub(/#{@staticmatic.src_dir}/, "").
-                      gsub(/#{@staticmatic.site_dir}/, "").
+          path = path.gsub(/^#{@staticmatic.src_dir}/, "").
+                      gsub(/^#{@staticmatic.site_dir}/, "").
                       gsub(/#{filename_without_extension}\.(sass|scss|css|js|coffee)/, "")
 
           src = File.join(current_page_relative_path, path, "#{filename_without_extension}")
