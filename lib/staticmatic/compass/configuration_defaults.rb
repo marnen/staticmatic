@@ -11,19 +11,19 @@ module Compass
         end
         
         def sass_dir_without_default
-          "src/stylesheets"
+          "src"
         end
 
         def javascripts_dir_without_default
-          "site/javascripts"
+          "build"
         end
 
         def css_dir_without_default
-          "site/stylesheets"
+          "build"
         end
 
         def images_dir_without_default
-          "site/images"
+          "build"
         end
         
         def default_http_images_path
