@@ -1,28 +1,42 @@
-require "rubygems"
-require 'spec/rake/spectask'
-
-require File.expand_path("../lib/staticmatic", __FILE__)
+require 'rubygems'
+require 'bundler'
 
 begin
-  require 'jeweler'
-  Jeweler::Tasks.new do |gem|
-    gem.name = "staticmatic"
-    gem.executables = "staticmatic"
-    gem.summary = "Lightweight Static Site Framework"
-    gem.email = "steve@curve21.com"
-    gem.homepage = "http://staticmatic.net"
-    gem.description = "Lightweight Static Site Framework"
-    gem.authors = ["Stephen Bartholomew"]
-    
-    gem.files.include "[A-Z]*", "{bin,lib,spec}/**/*"
-    gem.files.exclude "spec/sandbox/tmp", "spec/sandbox/test_site/site/*"
-    gem.add_dependency("haml", ">=2.0.0")
-    gem.add_dependency("rack", ">=1.0")
-    gem.add_dependency("thor", ">=0.14.6")
-  end
-rescue LoadError
-  puts "Jeweler, or one of its dependencies, is not available. Install it with: gem install jeweler"
+  Bundler.setup(:default, :development)
+rescue Bundler::BundlerError => e
+  $stderr.puts e.message
+  $stderr.puts "Run `bundle install` to install missing gems"
+  exit e.status_code
 end
+
+# require 'rake'
+require 'jeweler'
+require 'spec/rake/spectask'
+require File.expand_path("../lib/staticmatic", __FILE__)
+
+Jeweler::Tasks.new do |gem|
+  gem.name        = "staticmatic2"
+  gem.email       = "gilbertbgarza@gmail.com"
+  gem.license     = "MIT"
+  gem.summary     = "Build static websites using modern dynamic tools"
+  gem.homepage    = "http://github.com/mindeavor/staticmatic"
+  gem.executables = "staticmatic"
+  gem.authors     = ["Stephen Bartholomew", "Gilbert B Garza"]
+
+  gem.description = <<-EOF
+    StaticMatic helps you quickly create maintainable static websites using
+    tools such as Haml and Sass.
+    
+    Quickly deploy to services such as Amazon S3 in a single command.
+  EOF
+  
+  gem.rubyforge_project = "staticmatic2"
+  
+  gem.files.include "[A-Z]*", "{bin,lib,spec}/**/*"
+  gem.files.exclude "spec/sandbox/tmp", "spec/sandbox/test_site/site/*"
+end
+
+# Jeweler::RubygemsDotOrgTasks.new
 
 Spec::Rake::SpecTask.new(:spec) do |spec|
   spec.libs << 'lib' << 'spec'

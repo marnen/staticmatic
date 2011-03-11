@@ -1,23 +1,33 @@
-# StaticMatic
+# StaticMatic: Build and Deploy
 
-Build static websites using modern dynamic tools:
+1: Build static websites using modern dynamic tools:
 
 - [Haml](http://haml-lang.com/)
 - [Sass](http://sass-lang.com/)
 - [Coffeescript](http://jashkenas.github.com/coffee-script/)
 - [Compass](compass-style.org)
-- And more to come.
+- And more to come
 
-In other words:
+2: Deploy to Amazon S3:
 
-                        StaticMatic
-    src/                    ==>           site/
-      index.haml            ==>             index.html
-      style.sass            ==>             style.css
-      js/                   ==>             js/
-        app.coffee          ==>               app.js
-      img/                  ==>             img/
-        logo.png            ==>               logo.png
+    $ staticmatic s3_deploy
+
+3: Profit (due to low hosting fees :P)
+
+## In other words:
+
+                    StaticMatic build                   StaticMatic deploy
+    src/                    ==>           build/                ==>           mywebsite.com/
+      index.haml            ==>             index.html          ==>             index.html
+      style.sass            ==>             style.css           ==>             style.css
+      js/                   ==>             js/                 ==>             js/
+        app.coffee          ==>               app.js            ==>               app.js
+      img/                  ==>             img/                ==>             img/
+        logo.png            ==>               logo.png          ==>               logo.png
+
+# Getting Started
+
+    $ gem install staticmatic2
 
 ## Quick Start
 
@@ -50,14 +60,17 @@ When you're ready to deploy, convert your haml/sass/whatever files into plain ht
 
     staticmatic build
     
-This will convert everything into a freshly generated `site/` folder, all ready to deploy!
+This will convert everything into a freshly generated `build/` folder, all ready to deploy!
 
 ## Special Folders
 
     <my-project>/
       src/
+        _helpers/
         _layouts/
         _partials/
+
+- The `_helpers` folder is where you place your custom Haml helpers
 
 - The `_layouts` folder is where layout files will be searched for. These files must contain a `yield` statement.
 
