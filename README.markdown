@@ -6,6 +6,7 @@
 - [Sass](http://sass-lang.com/)
 - [Coffeescript](http://jashkenas.github.com/coffee-script/)
 - [Compass](compass-style.org)
+- [Amazon S3 Websites](http://aws.typepad.com/aws/2011/02/host-your-static-website-on-amazon-s3.html)
 - And more to come
 
 2: Deploy to Amazon S3:
@@ -56,11 +57,18 @@ Preview your static website:
 
 Visit http://localhost:3000 to view your website in action.
 
-When you're ready to deploy, convert your haml/sass/whatever files into plain html, css, and javascript:
+To build & convert your haml/sass/whatever files into plain html, css, and javascript:
 
-    staticmatic build
+    $ staticmatic build
     
-This will convert everything into a freshly generated `build/` folder, all ready to deploy!
+This will convert everything into a freshly generated `build/` folder, 100% static.
+
+If you have an Amazon S3 account and want to deploy to your bucket, run the following command:
+
+    # NOTE: You must be in the root folder of your project
+    $ staticmatic s3_deploy
+
+If you haven't deployed your current project to Amazon yet, it will prompt you to create a config file. Edit this file to include your credentials, run the command again, and you're set.
 
 ## Special Folders
 
