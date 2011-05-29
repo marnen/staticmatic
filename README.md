@@ -122,3 +122,11 @@ Force the browser to ignore its cache whenever you damn well feel like it:
     javascripts :app, :qstring => '2.0.6'
 
     <script language="javascript" src="js/app.js?_=2.0.6" type="text/javascript"></script>
+
+# Roadmap / TODO list
+
+- Fix slowness of executable (built on [Thor](https://github.com/wycats/thor); maybe reconsider?)
+- Create a cache that monitors what files have changed in between Amazon S3 uploads to reduce unnecessary uploads
+- Integrate sprockets both for building and for previewing (probably as an option flag)
+- Change rendering and yielding syntax to rails syntax
+- Create a command that converts a staticmatic project to a rails project
