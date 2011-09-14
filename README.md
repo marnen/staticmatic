@@ -32,7 +32,7 @@
 
 ## Quick Start
 
-Instantly setup a new project:
+Setup a new project:
 
     $ staticmatic init my-project
 
@@ -63,12 +63,23 @@ To build & convert your haml/sass/whatever files into plain html, css, and javas
     
 This will convert everything into a freshly generated `build/` folder, 100% static.
 
-If you have an Amazon S3 account and want to deploy to your bucket, run the following command:
+If you have an [Amazon S3 account](http://aws.amazon.com/s3/) and want to deploy to your bucket, run the following command:
 
     # NOTE: You must be in the root folder of your project
     $ staticmatic s3_deploy
 
 If you haven't deployed your current project to Amazon yet, it will prompt you to create a config file. Edit this file to include your credentials, run the command again, and you're set.
+
+## Super Special Awesome Quick Start Booster
+
+Want to use a [Javascript App Starter](https://github.com/mindeavor/staticmatic-js-app-starter) or a skeleton of your own? Check this out!
+
+    $ staticmatic add js-app git://github.com/mindeavor/staticmatic-js-app-starter.git
+    $ staticmatic init my-new-project --skeleton=js-app
+
+The first line stores a named reference to a repository of your choosing. You only need to do this once.
+
+The second line clones the referenced repository into a freshly created `my-new-project` folder, as well as removes the `.git/` folder so you can do your own `git init`. Convenient!
 
 ## Special Folders
 
@@ -95,7 +106,7 @@ Partials are searched for in the following order:
 
 Examples:
 
-    # Searches for the default rendering engine file type
+    # Searches for the default rendering engine file type (in this case, haml is the default)
     = partial 'sidebar'
     
     # Equivalent to the above statement
