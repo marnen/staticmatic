@@ -7,7 +7,7 @@
 - [Coffeescript](http://jashkenas.github.com/coffee-script/)
 - [Compass](compass-style.org)
 - [Amazon S3 Websites](http://aws.typepad.com/aws/2011/02/host-your-static-website-on-amazon-s3.html)
-- And more to come
+- [And many, many more!](https://github.com/rtomayko/tilt#readme)
 
 2: Deploy to Amazon S3:
 
@@ -106,7 +106,7 @@ Partials are searched for in the following order:
 
 Examples:
 
-    # Searches for the default rendering engine file type (in this case, haml is the default)
+    # Searches for the default rendering engine file type (by default, it is haml)
     = partial 'sidebar'
     
     # Equivalent to the above statement
@@ -116,7 +116,7 @@ Examples:
     = partial 'help-content.html'
     
     # Use your own directory structure
-    = partial 'blog-content/2011/vacation.html'
+    = partial 'blog-content/2011/vacation.markdown'
 
 ## Anti-Cache
 
