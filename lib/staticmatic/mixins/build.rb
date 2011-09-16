@@ -30,7 +30,11 @@ module StaticMatic::BuildMixin
 
     FileUtils.mkdir_p(File.dirname site_path)
     File.open(site_path, 'w+') do |f|
-      f << render_template(src_path)
+      if target_ext == 'html'
+        f << render_template_with_layout(src_path)
+      else
+        f << render_template(src_path)
+      end
     end
   end
 
