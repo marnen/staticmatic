@@ -33,7 +33,7 @@ module StaticMatic
 
       %w{
         creole erb haml liquid radius mab markdown md
-        mediawiki mkd mw nokogiri rdoc rhtml textile wiki
+        mediawiki mkd mw nokogiri rdoc rhtml slim textile wiki
       }.each do |ext|
         @reverse_ext_mappings[ext] = 'html'
       end
