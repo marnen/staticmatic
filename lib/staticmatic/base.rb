@@ -41,6 +41,9 @@ module StaticMatic
 
       @scope = Object.new
       @scope.instance_variable_set("@staticmatic", self)
+      @scope.instance_eval do
+        extend StaticMatic::Helpers
+      end
       
       load_configuration      
       configure_compass

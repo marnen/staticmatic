@@ -11,7 +11,6 @@ require 'fileutils'
 
 
 module StaticMatic
-  VERSION = "0.11.0"
 end
 
 ["render", "build", "setup", "server", "helpers", "rescue"].each do |mixin|
@@ -21,6 +20,3 @@ end
 ["base", "configuration", "error", "server", "helpers", "template_error", "ambiguous_template_error", "compass"].each do |lib|
   require File.join(File.dirname(__FILE__), "staticmatic", lib)
 end
-
-Haml::Helpers.class_eval("include StaticMatic::Helpers")
-
