@@ -86,7 +86,7 @@ module StaticMatic
       else
         context = File.join(@src_dir, dir, name)
         possible_templates = Dir[context + '.*'].select do |fname|
-          extensions.include? File.extname(fname)[1..-1]
+          extensions.include? File.extname(fname).sub(/^\./, '')
         end
 
         if possible_templates.count > 1
@@ -135,10 +135,6 @@ module StaticMatic
         # well as any files in a folder with a prefixed underscore
         path.split('/').map {|x| x.match('^\_')}.any?
       end
-    end
-
-    def src_file_names(*exts)
-      src_file_paths(*exts).map {|p| File.split(p)[1]}
     end
 
   end
