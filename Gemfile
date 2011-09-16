@@ -1,16 +1,16 @@
 source "http://rubygems.org"
 
-gem "haml"
-gem "sass"
+gem "haml", "~> 3"
+gem "sass", "~> 3"
+gem "tilt", ">= 1.3"
 gem "compass"
-gem "tilt"
 
 gem "rack", ">= 1.0"
 gem "thor", ">=0.14.6"
 gem "aws-s3"
 
 group :development do
-  gem "bundler", ">= 1.0.10"
-  gem "jeweler", ">= 1.5.2"
+  gem "bundler", "~> 1.0"
+  gem "jeweler", "~> 1.6"
   gem "rspec", "~> 1.3.1"
 end

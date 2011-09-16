@@ -18,13 +18,13 @@ Jeweler::Tasks.new do |gem|
   gem.name        = "staticmatic2"
   gem.email       = "gilbertbgarza@gmail.com"
   gem.license     = "MIT"
-  gem.summary     = "Build static websites using modern dynamic tools"
-  gem.homepage    = "http://github.com/mindeavor/staticmatic"
+  gem.summary     = "Build Amazon S3 static websites using modern dynamic tools"
+  gem.homepage    = "http://github.com/mindeavor/staticmatic2"
   gem.executables = "staticmatic"
   gem.authors     = ["Stephen Bartholomew", "Gilbert B Garza"]
 
   gem.description = <<-EOF
-    StaticMatic helps you quickly create maintainable static websites using
+    StaticMatic helps you quickly create maintainable Amazon S3 static websites using
     tools such as Haml and Sass.
     
     Quickly deploy to services such as Amazon S3 in a single command.
