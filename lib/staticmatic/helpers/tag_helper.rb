@@ -20,7 +20,7 @@ module StaticMatic
           output << yield
           output << "</#{name}>"
         else
-          format = @staticmatic.configuration.haml_options[:format]
+          format = @staticmatic.configuration.engine_options['haml'][:format]
           
           if format.nil? || format == :xhtml
             output << "/>"
