@@ -9,27 +9,35 @@ module StaticMatic
     include StaticMatic::RescueMixin    
   
     attr_accessor :configuration
-    attr_reader :current_page, :src_dir, :site_dir
+    attr_reader :src_dir, :site_dir
 
     def current_file
       @current_file_stack[0] || ""
     end
-    
+
+    def self.extensions
+      @extensions ||= (Tilt.mappings.map { |k,v| k } << "slim")
+    end
+
+    def extensions
+      self.class.extensions
+    end
+
+    def ensure_extension(filename)
+      ext = File.extname(filename)
+      ext.length > 0 ? filename : "#{filename}.#{configuration.default_template_engine}"
+    end
+
     def initialize(base_dir, configuration = Configuration.new)
       @configuration = configuration
-      @current_page = nil
       @current_file_stack = []
+
       @base_dir = base_dir
       @src_dir = File.join(@base_dir, "src")
       @site_dir = File.join(@base_dir, "build")
-      
-      if File.exists?(File.join(@src_dir, "_layouts", "application.haml"))
-        puts "DEPRECATION: _layouts/application.haml will be renamed to _layouts/default.haml in 0.12.0"
-        @default_layout = "application"
-      else
-        @default_layout = "default"
-      end
-      
+
+      @default_layout_name = "default"
+
       @scope = Object.new
       @scope.instance_variable_set("@staticmatic", self)
       
@@ -38,18 +46,10 @@ module StaticMatic
 
       load_helpers
     end
-    
+
     def load_configuration
       configuration = StaticMatic::Configuration.new
       config_file = File.join(@base_dir, "config", "site.rb")
-
-      if !File.exists?(config_file)
-        config_file = File.join(@base_dir, "src", "configuration.rb")
-
-        if File.exists?(config_file)
-          puts "DEPRECATION: #{@base_dir}/src/configuration.rb will be moved to #{@base_dir}/config/site.rb in 0.12.0"
-        end
-      end
       
       if File.exists?(config_file)
         config = File.read(config_file)
@@ -59,11 +59,11 @@ module StaticMatic
       # Compass.sass_engine_options.merge!(configuration.sass_options)
       @configuration = configuration
     end
-    
+
     def base_dir
       @base_dir
     end
-  
+
     def run(command)
       puts "Site root is: #{@base_dir}"
       
@@ -73,27 +73,49 @@ module StaticMatic
         puts "#{command} is not a valid StaticMatic command"
       end
     end
-      
-    # TODO: DRY this _exists? section up
-    def template_exists?(name, ext, dir = '')
-      if ext == 'html'
-        src_file_names('haml').include? "#{name}.haml"
-      elsif ext == 'css'
-        (src_file_names('sass').include? "#{name}.sass") ||
-        (src_file_names('scss').include? "#{name}.scss")
-      elsif ext == 'js'
-        src_file_names('coffee').include? "#{name}.coffee"
+
+    def determine_template_path(name, ext, dir = '')
+      # remove src path if present
+      dir.gsub! /^#{@src_dir}\//, ''
+
+      default_template_name = "#{name}.#{configuration.default_template_engine}"
+      default_template = File.join(@src_dir, dir, default_template_name)
+
+      if File.exists? default_template
+        default_template
+      else
+        context = File.join(@src_dir, dir, name)
+        possible_templates = Dir[context + '.*'].select do |fname|
+          extensions.include? File.extname(fname)[1..-1]
+        end
+
+        if possible_templates.count > 1
+          raise StaticMatic::AmbiguousTemplateError.new("#{name}#{ext}", possible_templates)
+        end
+
+        possible_templates.first
       end
     end
-    
-    def layout_exists?(name)
-      File.exists? full_layout_path(name)
+
+    def expand_path(path_info)
+      dirname, basename = File.split(path_info)
+
+      extname = File.extname(path_info).sub(/^\./, '')
+      filename = basename.chomp(".#{extname}")
+
+      if extname.empty?
+        dir = File.join(dirname, filename)
+        is_dir = path_info[-1, 1] == '/'
+        if is_dir
+          dirname = dir
+          filename = 'index'
+        end
+        extname = 'html'
+      end
+
+      [ dirname, filename, extname ]
     end
-    
-    def full_layout_path(name)
-      File.join(@src_dir, "_layouts", "#{name}.haml")
-    end
-    
+
     def configure_compass
       Compass.configuration.project_path = @base_dir 
 
@@ -105,7 +127,7 @@ module StaticMatic
 
       configuration.sass_options.merge!(Compass.configuration.to_sass_engine_options)
     end
-    
+
     # TODO OPTIMIZE: caching, maybe?
     def src_file_paths(*exts)
       Dir["#{@src_dir}/**/*.{#{ exts.join(',') }}"].reject do |path|
@@ -114,10 +136,10 @@ module StaticMatic
         path.split('/').map {|x| x.match('^\_')}.any?
       end
     end
-    
+
     def src_file_names(*exts)
       src_file_paths(*exts).map {|p| File.split(p)[1]}
     end
-    
+
   end
 end

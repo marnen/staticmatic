@@ -74,4 +74,13 @@ module StaticMatic::BuildMixin
     
     puts "created #{path}"
   end
+
+  # Returns a dir and raw template name from a source file path:
+  # source_template_from_path("/path/to/site/src/stylesheets/application.sass")  -> [ "/path/to/site/src/stylesheets", "application" ]
+  def source_template_from_path(path)
+    file_dir, file_name = File.split(path)
+    file_name.chomp!(File.extname(file_name))
+    [ file_dir, file_name ]
+  end
+
 end

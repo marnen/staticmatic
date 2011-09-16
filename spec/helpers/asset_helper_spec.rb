@@ -7,7 +7,6 @@ describe "Helpers:" do
   include StaticMatic::Helpers::TagHelper
   before do
     setup_staticmatic
-    @staticmatic.instance_variable_set("@current_page", "")
   end
   
   context "When using the stylesheet helper" do
@@ -32,7 +31,6 @@ describe "Helpers:" do
   
   context "When using the stylesheet helper from a sub page" do
     before do
-      @staticmatic.instance_variable_set("@current_page", "/sub/index.html")
       @links = stylesheets
     end
     

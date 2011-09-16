@@ -1,6 +1,6 @@
 %h1= @exception.class.name
 
-%p= @exception.message
+%p= @exception.message.gsub /\n/, '<br />'
 
 %h2 Stack Trace
 

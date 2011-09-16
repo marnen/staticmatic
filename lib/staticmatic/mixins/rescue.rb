@@ -7,6 +7,6 @@ module StaticMatic::RescueMixin
     
     @scope.instance_variable_set("@exception", exception)
     
-    generate_html_from_template_source(File.read(error_template_path))
+    render_template(error_template_path)
   end
 end

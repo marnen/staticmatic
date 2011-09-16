@@ -39,7 +39,7 @@ module StaticMatic
       
       # Generate javascript source tags for the specified files
       #
-      # javascripts('test')   ->   <script language="javascript" src="javascripts/test.js"></script>
+      # javascripts('test')   ->   <script language="javascript" src="path/to/test.js"></script>
       #    
       def javascripts(*files)
         options = (files.last.is_a? Hash) ? files.pop : {}

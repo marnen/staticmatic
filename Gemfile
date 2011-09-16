@@ -1,7 +1,10 @@
 source "http://rubygems.org"
 
-gem "haml", ">= 2.0.0"
+gem "haml"
+gem "sass"
 gem "compass"
+gem "tilt"
+
 gem "rack", ">= 1.0"
 gem "thor", ">=0.14.6"
 gem "aws-s3"

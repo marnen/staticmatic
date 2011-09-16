@@ -4,7 +4,7 @@ module StaticMatic
       self.extend self
       
       def current_page
-        @staticmatic.current_page
+        @staticmatic.current_file
       end
 
       private
