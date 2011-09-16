@@ -65,7 +65,7 @@ class StaticExe < Thor
   desc "build DIRECTORY", "Build your project into a freshly generated build/ folder"
   def build(directory = '.')
     say 'Building website...', :cyan
-    staticmatic = StaticMatic::Base.new(directory)
+    staticmatic = StaticMatic::Base.new(directory, :build)
     $:.push File.join(directory, "lib")
     staticmatic.run('build')
   end

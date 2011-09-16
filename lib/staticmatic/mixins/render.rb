@@ -84,12 +84,27 @@ module StaticMatic::RenderMixin
 
   private
 
-  def tilt_template(file_path, options = {})
-    Tilt.new(file_path).render(@scope, options[:locals])
+  # TODO: more code reuse. needs some ruby &block and yield sorcery.
+  def tilt_template(file_path)
+    options = get_engine_options(file_path)
+    Tilt.new(file_path, options).render(@scope)
   end
 
-  def tilt_template_with_layout(file_path, options = {})
-    Tilt.new(file_path).render(@scope, options[:locals]) { yield }
+  def tilt_template_with_layout(file_path)
+    options = get_engine_options(file_path)
+    Tilt.new(file_path, options).render(@scope) { yield }
+  end
+
+  def get_engine_options(file_path)
+    ext = File.extname(file_path).sub(/^\./, '')
+    options = configuration.engine_options[ext] || {}
+    preview_options = configuration.preview_engine_options[ext] || {}
+
+    if @mode == :preview
+      options.merge preview_options
+    else
+      options
+    end
   end
 
 end

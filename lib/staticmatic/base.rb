@@ -8,7 +8,7 @@ module StaticMatic
     include StaticMatic::ServerMixin    
     include StaticMatic::RescueMixin    
   
-    attr_accessor :configuration
+    attr_accessor :configuration, :mode
     attr_reader :src_dir, :site_dir
 
     def current_file
@@ -28,9 +28,10 @@ module StaticMatic
       ext.length > 0 ? filename : "#{filename}.#{configuration.default_template_engine}"
     end
 
-    def initialize(base_dir, configuration = Configuration.new)
-      @configuration = configuration
+    def initialize(base_dir, mode = :preview)
+      @configuration = Configuration.new
       @current_file_stack = []
+      @mode = mode
 
       @base_dir = base_dir
       @src_dir = File.join(@base_dir, "src")
@@ -56,7 +57,6 @@ module StaticMatic
         eval(config)
       end
 
-      # Compass.sass_engine_options.merge!(configuration.sass_options)
       @configuration = configuration
     end
 
@@ -122,10 +122,14 @@ module StaticMatic
       compass_config_path = File.join(@base_dir, "config", "compass.rb")
       
       if File.exists?(compass_config_path)
-        Compass.add_configuration(compass_config_path)         
+        Compass.add_configuration(compass_config_path)
       end
 
-      configuration.sass_options.merge!(Compass.configuration.to_sass_engine_options)
+      options = configuration.engine_options
+      compass_options = Compass.configuration.to_sass_engine_options
+
+      options['sass'] = compass_options.merge(options['sass'] || {})
+      options['scss'] = compass_options.merge(options['scss'] || {})
     end
 
     # TODO OPTIMIZE: caching, maybe?
