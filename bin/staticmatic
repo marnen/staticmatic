@@ -3,10 +3,9 @@ require 'rubygems'
 require 'pathname'
 require 'thor'
 
-lib_dir = Pathname.new(__FILE__).realpath.dirname.join('../lib/staticmatic').to_s
+$lib_dir = Pathname.new(__FILE__).realpath.dirname.join('../lib/staticmatic').to_s
 
-require lib_dir
-Dir[File.join lib_dir,'deployers','*.rb'].each do |deployer|
+Dir[File.join $lib_dir,'deployers','*.rb'].each do |deployer|
   require deployer
 end
 
@@ -57,6 +56,7 @@ class StaticExe < Thor
   desc "preview DIRECTORY", "Start a web server to preview your project"
   def preview(directory = '.')
     say 'Launching preview server...', :cyan
+    require $lib_dir
     staticmatic = StaticMatic::Base.new(directory)
     $:.push File.join(directory, "lib")
     staticmatic.run('preview')
@@ -65,6 +65,7 @@ class StaticExe < Thor
   desc "build DIRECTORY", "Build your project into a freshly generated build/ folder"
   def build(directory = '.')
     say 'Building website...', :cyan
+    require $lib_dir
     staticmatic = StaticMatic::Base.new(directory, :build)
     $:.push File.join(directory, "lib")
     staticmatic.run('build')
