@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "staticmatic2"
-  s.version = "2.0.2"
+  s.version = "2.1.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Stephen Bartholomew", "Gilbert B Garza"]
-  s.date = "2011-09-16"
+  s.date = "2011-09-17"
   s.description = "    StaticMatic helps you quickly create maintainable Amazon S3 static websites using\n    tools such as Haml and Sass.\n    \n    Quickly deploy to services such as Amazon S3 in a single command.\n"
   s.email = "gilbertbgarza@gmail.com"
   s.executables = ["staticmatic"]
