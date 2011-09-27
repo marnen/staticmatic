@@ -36,7 +36,7 @@ Jeweler::Tasks.new do |gem|
   gem.files.exclude "spec/sandbox/tmp", "spec/sandbox/test_site/site/*"
 end
 
-# Jeweler::RubygemsDotOrgTasks.new
+Jeweler::RubygemsDotOrgTasks.new
 
 Spec::Rake::SpecTask.new(:spec) do |spec|
   spec.libs << 'lib' << 'spec'
