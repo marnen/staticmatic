@@ -11,7 +11,7 @@ module StaticMatic
     
     def initialize
       self.preview_server_host = "localhost"
-      self.preview_server_port = 3000
+      self.preview_server_port = 4000
 
       self.use_extensions_for_page_links = true
       self.default_template_engine = 'haml'

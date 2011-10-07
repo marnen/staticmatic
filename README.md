@@ -55,7 +55,7 @@ Preview your static website:
     Ctrl+C to exit
     ...
 
-Visit http://localhost:3000 to view your website in action.
+Visit http://localhost:4000 to view your website in action.
 
 To build & convert your haml/sass/whatever files into plain html, css, and javascript:
 
