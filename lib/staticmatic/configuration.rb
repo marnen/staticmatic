@@ -16,9 +16,11 @@ module StaticMatic
       self.use_extensions_for_page_links = true
       self.default_template_engine = 'haml'
 
-      self.preview_engine_options = self.engine_options = {
+      self.engine_options = {
         'haml' => {}, 'sass' => {}, 'scss' => {},
       }
+      self.preview_engine_options = self.engine_options.clone
+
       # TODO: discover a way of auto-detecting these. one can hope.
       self.reverse_ext_mappings = {
         'sass' => 'css',
