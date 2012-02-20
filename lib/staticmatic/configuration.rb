@@ -1,5 +1,6 @@
 module StaticMatic
   class Configuration
+    attr_accessor :preview_server
     attr_accessor :preview_server_host
     attr_accessor :preview_server_port
     
@@ -10,6 +11,7 @@ module StaticMatic
     attr_accessor :reverse_ext_mappings
     
     def initialize
+      self.preview_server = Rack::Handler::WEBrick
       self.preview_server_host = "localhost"
       self.preview_server_port = 4000
 

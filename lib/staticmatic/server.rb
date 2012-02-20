@@ -60,7 +60,7 @@ module StaticMatic
         run StaticMatic::Server.new(staticmatic)
       end 
       
-      Rack::Handler::WEBrick.run(app, :Port => port, :Host => host)
+      staticmatic.configuration.preview_server.run(app, :Port => port, :Host => host)
     end
 
   end
