@@ -1,10 +1,10 @@
-
 module Compass
   module AppIntegration
+
     module Staticmatic
 
       extend self
-      
+
       def installer(*args)
         Installer.new(*args)
       end
@@ -14,5 +14,8 @@ module Compass
       end
 
     end
+
+    register :staticmatic, 'Compass::AppIntegration::Staticmatic'
+
   end
 end

@@ -3,7 +3,7 @@ source "http://rubygems.org"
 gem "haml", "~> 3.1"
 gem "sass", "~> 3.1"
 gem "tilt", ">= 1.3"
-gem "compass", "~> 0.11.7"
+gem "compass", "~> 0.12.1"
 
 gem "rack", ">= 1.0"
 gem "thor", ">=0.14.6"
