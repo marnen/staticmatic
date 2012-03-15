@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "staticmatic2"
-  s.version = "2.1.3"
+  s.version = "2.1.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Stephen Bartholomew", "Gilbert B Garza"]
-  s.date = "2012-03-14"
+  s.date = "2012-03-15"
   s.description = "    StaticMatic helps you quickly create maintainable Amazon S3 static websites using\n    tools such as Haml and Sass.\n    \n    Quickly deploy to services such as Amazon S3 in a single command.\n"
   s.email = "gilbertbgarza@gmail.com"
   s.executables = ["staticmatic"]
@@ -129,7 +129,7 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<haml>, ["~> 3.1"])
       s.add_runtime_dependency(%q<sass>, ["~> 3.1"])
       s.add_runtime_dependency(%q<tilt>, [">= 1.3"])
-      s.add_runtime_dependency(%q<compass>, ["~> 0.11.7"])
+      s.add_runtime_dependency(%q<compass>, ["~> 0.12.1"])
       s.add_runtime_dependency(%q<rack>, [">= 1.0"])
       s.add_runtime_dependency(%q<thor>, [">= 0.14.6"])
       s.add_runtime_dependency(%q<aws-s3>, [">= 0"])
@@ -140,7 +140,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<haml>, ["~> 3.1"])
       s.add_dependency(%q<sass>, ["~> 3.1"])
       s.add_dependency(%q<tilt>, [">= 1.3"])
-      s.add_dependency(%q<compass>, ["~> 0.11.7"])
+      s.add_dependency(%q<compass>, ["~> 0.12.1"])
       s.add_dependency(%q<rack>, [">= 1.0"])
       s.add_dependency(%q<thor>, [">= 0.14.6"])
       s.add_dependency(%q<aws-s3>, [">= 0"])
@@ -152,7 +152,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<haml>, ["~> 3.1"])
     s.add_dependency(%q<sass>, ["~> 3.1"])
     s.add_dependency(%q<tilt>, [">= 1.3"])
-    s.add_dependency(%q<compass>, ["~> 0.11.7"])
+    s.add_dependency(%q<compass>, ["~> 0.12.1"])
     s.add_dependency(%q<rack>, [">= 1.0"])
     s.add_dependency(%q<thor>, [">= 0.14.6"])
     s.add_dependency(%q<aws-s3>, [">= 0"])
