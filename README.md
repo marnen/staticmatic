@@ -141,3 +141,5 @@ Force the browser to ignore its cache whenever you damn well feel like it:
 - Integrate sprockets both for building and for previewing (probably as an option flag)
 - Change rendering and yielding syntax to rails syntax
 - Create a command that converts a staticmatic project to a rails project
+
+[![endorse](http://api.coderwall.com/mindeavor/endorse.png)](http://coderwall.com/mindeavor)
